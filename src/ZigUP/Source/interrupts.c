@@ -33,25 +33,22 @@ __interrupt void IRQ_KEY(void)
   {
     // debounce
     _delay_ms(20);
-    if (!P1_3) // still pressed?
-    {
-      Relais(!STATE_LIGHT);
-      UART_String("[INT] KEY!");
-      
-      // detection for longer keypress
-      uint8 counter = 0;
-      while (!P1_3 && counter < 100)
-      {
-        _delay_ms(50);
-        counter++;
+    if((PICTL & BV(3))== BV(3)){
+      if(!P1_3){
+        PICTL &= ~BV(3);     // Rising Edge P1.3 (KEY)
+
+        Relais(!STATE_LIGHT);
+        Measure_QuickStuff();
+        zclZigUP_Reporting(REPORT_REASON_KEY);        
       }
-      if (counter >= 100) FactoryReset();
+    }else if((PICTL & BV(3))== 0){
+      if(P1_3){
+      PICTL |= BV(3);       // Faling Edge P1.3 (KEY)
       
-      // update measurements (only the quick stuff, to stay responsive)
+      Relais(!STATE_LIGHT);
       Measure_QuickStuff();
-      
-      // report states
-      zclZigUP_Reporting(REPORT_REASON_KEY);      
+      zclZigUP_Reporting(REPORT_REASON_KEY);
+      }
     }
     
     // Clear interrupt flags
@@ -69,6 +66,7 @@ __interrupt void IRQ_DIGIN(void)
     _delay_ms(20);
     if (!P2_0) // still pressed?
     {
+      Relais(!STATE_LIGHT);
       DIG_IN = P2_0;
       UART_String("[INT] Dig-In!");
       
