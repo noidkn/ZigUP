@@ -37,17 +37,17 @@ __interrupt void IRQ_KEY(void)
       if(!P1_3){
         PICTL &= ~BV(1);     // Rising Edge P1.3 (KEY)
 
-        Relais(!STATE_LIGHT);
+        Relais(0);           // Relay On
         Measure_QuickStuff();
         zclZigUP_Reporting(REPORT_REASON_KEY);        
       }
     }else if((PICTL & BV(1))== 0){
       if(P1_3){
-      PICTL |= BV(1);       // Faling Edge P1.3 (KEY)
+        PICTL |= BV(1);       // Faling Edge P1.3 (KEY)
       
-      Relais(!STATE_LIGHT);
-      Measure_QuickStuff();
-      zclZigUP_Reporting(REPORT_REASON_KEY);
+        Relais(1);            // Relay Off
+        Measure_QuickStuff();
+        zclZigUP_Reporting(REPORT_REASON_KEY);
       }
     }
     
