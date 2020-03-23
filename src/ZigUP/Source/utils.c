@@ -24,22 +24,24 @@ void FactoryReset(void)
 
 void Relais(uint8 state)
 {
-  if (state)	// Switch light on
+  if (state== 1)	// Switch light on
   {
     P1_1 = 1;   // activate ON-solenoid
     P1_2 = 0;   // deactivate OFF-solenoid
     _delay_ms(50);
     P1_1 = 0;   // deactivate ON-solenoid
+    
+    STATE_LIGHT = state;
   }
-  else	// Switch light off
+  else	if(state== 0)// Switch light off
   {
     P1_1 = 0;   // deactivate ON-solenoid
     P1_2 = 1;   // activate OFF-solenoid
     _delay_ms(50);
     P1_2 = 0;   // deactivate OFF-solenoid
+    
+    STATE_LIGHT = state;
   }
-  
-  STATE_LIGHT = state;
 }
 
 void Measure_QuickStuff(void)
@@ -64,7 +66,7 @@ void Measure_Sensor(void)
     i = ds18b20_current;
     
     EXT_Temperatures[i] = ds18b20_get_sensor_temperature(i);
-    sprintf(buffer, "%02X%02X%02X%02X%02X%02X%02X%02X: %.2f °C",
+    sprintf(buffer, "%02X%02X%02X%02X%02X%02X%02X%02X: %.2f Â°C",
             ds18b20_FoundROM[i][7],ds18b20_FoundROM[i][6],ds18b20_FoundROM[i][5],ds18b20_FoundROM[i][4],
             ds18b20_FoundROM[i][3],ds18b20_FoundROM[i][2],ds18b20_FoundROM[i][1],ds18b20_FoundROM[i][0],
             EXT_Temperatures[i]);
