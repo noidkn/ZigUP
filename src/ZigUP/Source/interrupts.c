@@ -37,7 +37,7 @@ __interrupt void IRQ_KEY(void)
       if(!P1_3){
         PICTL &= ~BV(1);     // Rising Edge P1.3 (KEY)
 
-        Relais(0);           // Relay On
+        Relais(LIGHT_ON);           // Relay On
         Measure_QuickStuff();
         zclZigUP_Reporting(REPORT_REASON_KEY);        
       }
@@ -45,7 +45,7 @@ __interrupt void IRQ_KEY(void)
       if(P1_3){
         PICTL |= BV(1);       // Faling Edge P1.3 (KEY)
       
-        Relais(1);            // Relay Off
+        Relais(LIGHT_OFF);            // Relay Off
         Measure_QuickStuff();
         zclZigUP_Reporting(REPORT_REASON_KEY);
       }
